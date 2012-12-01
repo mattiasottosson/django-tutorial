@@ -1,0 +1,56 @@
+== Django on Heroku
+This is just a basic example of showing how to get the tutorial at https://docs.djangoproject.com/en/dev/intro/
+running on Heroku
+
+Example app available here: http://mo-django-tutorial.herokuapp.com
+
+== Instructions
+
+1.  Install Python, Distribute, Pip and Virtualenv:
+    http://docs.python-guide.org/en/latest/starting/install/osx/
+
+2.  Create a Virtualenv. Install the dependencies. Create an application, freeze dependencies and
+    config database settings, and create a Procfile: https://devcenter.heroku.com/articles/django
+
+3.  Set your local database to sqlite in settings py. Make sure that APP_ROOT/db exists before running syncdb
+
+      DATABASES = {
+          'default': {
+              'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+              'NAME': 'db/django_tutorial.sqlite3', # Or path to database file if using sqlite3.
+              'USER': '',                      # Not used with sqlite3.
+              'PASSWORD': '',                  # Not used with sqlite3.
+              'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+              'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+          }
+      }
+
+
+4.  Change the production database settings at the bottom of setting.py to only apply on Heroku
+
+      import os
+      import dj_database_url
+      if os.getcwd() == "/app":
+        DATABASES['default'] =  dj_database_url.config()
+
+5.  I set the template dir relative to the app root
+
+      TEMPLATE_DIRS = (
+        ''.join([os.getcwd(),"/views"])
+      )
+
+6.  Follow the tutorial at https://docs.djangoproject.com/en/dev/intro/
+
+    Each commit represents a step in the tutorial, apart from some mid step commits and root redirect.
+
+7.  When done, create a Heroku app on the cedar stack (default by now) and push it.
+
+    Migrate the databases by running
+
+      heroku run python manage.py syncdb
+
+    During this step, you're beeing told to create an admin account and set the details for it.
+
+8.  All done!
+
+    Visit http://yourappname.herokuapp.com
